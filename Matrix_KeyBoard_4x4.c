@@ -142,16 +142,16 @@ unsigned char KeyPressDetect_MKB4x4(MKB4x4_Typedef *MKB)
 {
     for (MKB->rows = 0; MKB->rows < 4; MKB->rows++)
     {
-        MKB->OutReSet[MKB->rows](); //           
+        MKB->pOutReSet[MKB->rows](); //           
         for (MKB->cols = 0; MKB->cols < 4; MKB->cols++)
         {
-            if (MKB->In[MKB->cols]() == 0)
+            if (MKB->pIn[MKB->cols]() == 0)
             {
-                MKB->OutSet[MKB->rows](); //      
+                MKB->pOutSet[MKB->rows](); //      
                 return MKB->keyCodeArr[MKB->rows][MKB->cols];
             }
         }
-        MKB->OutSet[MKB->rows](); //             
+        MKB->pOutSet[MKB->rows](); //             
     }
     return 0;
 } // unsigned char KeyPressDetect_MKB4x4(InOut_MKB4x4_Typedef *PORT)

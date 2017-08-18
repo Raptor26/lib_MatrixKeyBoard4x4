@@ -34,7 +34,7 @@
 // Определение единици времени
 #define MS_MKB4x4                           1
 #define SEC_MKB4x4                          (MS_MKB4x4 * 1000)
-#define DEBOUNCE_MKB4x4                     (MS_MKB4x4 * 100)
+#define DEBOUNCE_MKB4x4                     (MS_MKB4x4 * 50)
 #define FIRST_DELAY_MKB4x4                  (MS_MKB4x4 * 500)
 #define AUTO_REPEAT_MKB4x4                  (MS_MKB4x4 * 200)
 //==============================================================================

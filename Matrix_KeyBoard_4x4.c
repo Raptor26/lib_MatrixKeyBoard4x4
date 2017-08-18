@@ -140,18 +140,18 @@ void IntProcess_vTMR_MKB4x4(void)
  */
 unsigned char KeyPressDetect_MKB4x4(MKB4x4_Typedef *MKB)
 {
-    for (MKB->Rows = 0; MKB->Rows < 4; MKB->Rows++)
+    for (MKB->rows = 0; MKB->rows < 4; MKB->rows++)
     {
-        MKB->OutReSet[MKB->Rows](); //           
-        for (MKB->Cols = 0; MKB->Cols < 4; MKB->Cols++)
+        MKB->OutReSet[MKB->rows](); //           
+        for (MKB->cols = 0; MKB->cols < 4; MKB->cols++)
         {
-            if (MKB->In[MKB->Cols]() == 0)
+            if (MKB->In[MKB->cols]() == 0)
             {
-                MKB->OutSet[MKB->Rows](); //      
-                return MKB->KeyCode[MKB->Rows][MKB->Cols];
+                MKB->OutSet[MKB->rows](); //      
+                return MKB->keyCodeArr[MKB->rows][MKB->cols];
             }
         }
-        MKB->OutSet[MKB->Rows](); //             
+        MKB->OutSet[MKB->rows](); //             
     }
     return 0;
 } // unsigned char KeyPressDetect_MKB4x4(InOut_MKB4x4_Typedef *PORT)
@@ -167,7 +167,7 @@ unsigned char ProcessKeyFSM_MKB4x4(MKB4x4_Typedef *MKB)
     // Вывоз функции для опроса матричной клавиатуры
     MKB->keyCode = KeyPressDetect_MKB4x4(MKB);
 
-    switch (MKB->Status)
+    switch (MKB->status)
     {
     case NOT_PRESS:
         if (MKB->keyCode != 0)
@@ -181,7 +181,7 @@ unsigned char ProcessKeyFSM_MKB4x4(MKB4x4_Typedef *MKB)
     case DEBONCE:
         if (Get_vTMR_MKB4x4(MKB->id_TMR) >= DEBOUNCE_MKB4x4)
         {
-            MKB->Status = PRESS;
+            MKB->status = PRESS;
         }
         break;
 
@@ -189,12 +189,12 @@ unsigned char ProcessKeyFSM_MKB4x4(MKB4x4_Typedef *MKB)
         if (MKB->keyCode == MKB->_keyCode)
         {
             Start_vTMR_MKB4x4(MKB->id_TMR);
-            MKB->Status = FIRST_DELAY;
+            MKB->status = FIRST_DELAY;
             return MKB->keyCode;
         }
         else
         {
-            MKB->Status = NOT_PRESS;
+            MKB->status = NOT_PRESS;
             MKB->_keyCode = 0;
             Stop_vTMR_MKB4x4(MKB->id_TMR);
         }
@@ -206,13 +206,13 @@ unsigned char ProcessKeyFSM_MKB4x4(MKB4x4_Typedef *MKB)
             if (Get_vTMR_MKB4x4(MKB->id_TMR) >= FIRST_DELAY_MKB4x4)
             {
                 Start_vTMR_MKB4x4(MKB->id_TMR);
-                MKB->Status = AUTO_REPEAT;
+                MKB->status = AUTO_REPEAT;
                 return MKB->keyCode;
             }
         }
         else
         {
-            MKB->Status = NOT_PRESS;
+            MKB->status = NOT_PRESS;
             Stop_vTMR_MKB4x4(MKB->id_TMR);
             MKB->_keyCode = 0;
         }
@@ -229,7 +229,7 @@ unsigned char ProcessKeyFSM_MKB4x4(MKB4x4_Typedef *MKB)
         }
         else
         {
-            MKB->Status = NOT_PRESS;
+            MKB->status = NOT_PRESS;
             MKB->_keyCode = 0;
             Stop_vTMR_MKB4x4(MKB->id_TMR);
         }

@@ -1,7 +1,7 @@
 //******************************************************************************
 /*
  * @file    Matrix_KeyBoard_4x4.c
- * @author  Михаил Исаевgit
+ * @author  Михаил Исаев
  * @version 1.0
  * @date    28.07.2017
  * @brief   Драйвер для работы с матричноей клавиатурой размера 4х4. Позволяет 
@@ -119,8 +119,8 @@ uint16_t Get_vTMR_MKB4x4(uint16_t timerID)
  */
 void IntProcess_vTMR_MKB4x4(void)
 {
-    uint8_t i = 0;
-    
+    uint8_t i = 0; //           Переменная для цикла for
+
     for (i = 0; i < MAX_VIRT_TMR_MKB4x4; i++)
     {
         if (gTMRState_MKB4x4[i] == RUNNING)

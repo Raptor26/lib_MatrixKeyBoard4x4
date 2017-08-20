@@ -121,7 +121,9 @@ uint16_t Get_vTMR_MKB4x4(uint16_t timerID)
  */
 void IntProcess_vTMR_MKB4x4(void)
 {
-    for (uint16_t i = 0; i < MAX_VIRT_TMR_MKB4x4; i++)
+    uint8_t i = 0;
+    
+    for (i = 0; i < MAX_VIRT_TMR_MKB4x4; i++)
     {
         if (gTMRState_MKB4x4[i] == RUNNING)
         {

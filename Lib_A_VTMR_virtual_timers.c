@@ -31,20 +31,26 @@
 //******************************************************************************
 // Секция описания функций (сначала глобальных, потом локальных)
 
-void VTMR_Start(VTMR_tmr_s *vTMR)
+void VTMR_StartVirtTimer(VTMR_tmr_s *vTMR)
 {
     vTMR->state = RUNNING;
 }
 
-void VTMR_Stop(VTMR_tmr_s *vTMR)
+void VTMR_StopVirtTimer(VTMR_tmr_s *vTMR)
 {
     vTMR->state = STOP;
     vTMR->cnt = 0;
 }
 
-void VTMR_Pause(VTMR_tmr_s *vTMR)
+void VTMR_PauseVirtTimer(VTMR_tmr_s *vTMR)
 {
     vTMR->state = PAUSE;
+}
+
+void VTMR_ResetVirtTimer(VTMR_tmr_s *vTMR)
+{
+    vTMR->cnt = 0;
+    vTMR->state = RUNNING;
 }
 
 void VTMR_IntProcess(VTMR_tmr_s *vTMR)

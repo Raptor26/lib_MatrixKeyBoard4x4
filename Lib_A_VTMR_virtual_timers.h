@@ -31,7 +31,7 @@ typedef enum {
 } VTMR_tmr_state_e;
 
 typedef struct {
-    uint16_t cnt;
+    volatile uint32_t cnt;
     VTMR_tmr_state_e state;
 } VTMR_tmr_s;
 //******************************************************************************

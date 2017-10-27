@@ -31,7 +31,7 @@ typedef enum {
 } VTMR_tmr_state_e;
 
 typedef struct {
-    uint16_t cnt;
+    volatile uint32_t cnt;
     VTMR_tmr_state_e state;
 } VTMR_tmr_s;
 //******************************************************************************
@@ -44,9 +44,10 @@ typedef struct {
 
 //******************************************************************************
 // Секция прототипов глобальных функций
-extern void VTMR_Start(VTMR_tmr_s *vTMR);
-extern void VTMR_Stop(VTMR_tmr_s *vTMR);
-extern void VTMR_Pause(VTMR_tmr_s *vTMR);
+extern void VTMR_StartVirtTimer(VTMR_tmr_s *vTMR);
+extern void VTMR_StopVirtTimer(VTMR_tmr_s *vTMR);
+extern void VTMR_PauseVirtTimer(VTMR_tmr_s *vTMR);
+extern void VTMR_ResetVirtTimer(VTMR_tmr_s *vTMR);
 extern void VTMR_IntProcess(VTMR_tmr_s *vTMR);
 //******************************************************************************
 

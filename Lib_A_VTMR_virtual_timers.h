@@ -24,11 +24,10 @@
 //******************************************************************************
 // Секция определения типов
 
-
 typedef struct {
     volatile uint32_t cnt;
 
-    enum{
+    enum {
         STOP,
         RUNNING,
         PAUSE,
@@ -44,10 +43,9 @@ typedef struct {
 
 //******************************************************************************
 // Секция прототипов глобальных функций
-extern void VTMR_StartVirtTimer(VTMR_tmr_s *vTMR);
+extern void VTMR_ReStartVirtTimer(VTMR_tmr_s *vTMR);
 extern void VTMR_StopVirtTimer(VTMR_tmr_s *vTMR);
-extern void VTMR_PauseVirtTimer(VTMR_tmr_s *vTMR);
-extern void VTMR_ResetVirtTimer(VTMR_tmr_s *vTMR);
+extern void VTMR_StartVirtTimer(VTMR_tmr_s *vTMR);
 extern void VTMR_IntProcess(VTMR_tmr_s *vTMR);
 //******************************************************************************
 

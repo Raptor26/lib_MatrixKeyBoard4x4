@@ -24,15 +24,15 @@
 //******************************************************************************
 // Секция определения типов
 
-typedef enum {
-    STOP,
-    RUNNING,
-    PAUSE,
-} VTMR_tmr_state_e;
 
 typedef struct {
     volatile uint32_t cnt;
-    VTMR_tmr_state_e state;
+
+    enum{
+        STOP,
+        RUNNING,
+        PAUSE,
+    } state;
 } VTMR_tmr_s;
 //******************************************************************************
 

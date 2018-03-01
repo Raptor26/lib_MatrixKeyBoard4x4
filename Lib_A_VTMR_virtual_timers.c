@@ -31,7 +31,7 @@
 //******************************************************************************
 // Секция описания функций (сначала глобальных, потом локальных)
 
-void VTMR_ReStartVirtTimer(VTMR_tmr_s *vTMR)
+void VTMR_RestartVirtTimer(VTMR_tmr_s *vTMR)
 {
     vTMR->state = RUNNING;
     vTMR->cnt = 0;
@@ -47,6 +47,10 @@ void VTMR_StartVirtTimer(VTMR_tmr_s *vTMR)
     vTMR->state = RUNNING;
 }
 
+uint32_t VTMR_GetValueVirtTimer(VTMR_tmr_s *vTMR)
+{
+	return vTMR->cnt;
+}
 void VTMR_IntProcess(VTMR_tmr_s *vTMR)
 {
     if (vTMR->state == RUNNING)

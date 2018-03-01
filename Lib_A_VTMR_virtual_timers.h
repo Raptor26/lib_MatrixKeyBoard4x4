@@ -43,9 +43,10 @@ typedef struct {
 
 //******************************************************************************
 // Секция прототипов глобальных функций
-extern void VTMR_ReStartVirtTimer(VTMR_tmr_s *vTMR);
+extern void VTMR_RestartVirtTimer(VTMR_tmr_s *vTMR);
 extern void VTMR_StopVirtTimer(VTMR_tmr_s *vTMR);
 extern void VTMR_StartVirtTimer(VTMR_tmr_s *vTMR);
+extern uint32_t VTMR_GetValueVirtTimer(VTMR_tmr_s *vTMR);
 extern void VTMR_IntProcess(VTMR_tmr_s *vTMR);
 //******************************************************************************
 

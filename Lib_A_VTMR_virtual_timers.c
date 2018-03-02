@@ -65,16 +65,18 @@ void VTMR_IntProcess(
 }
 
 void VTMR_StartTimer(
-                         VTMR_tmr_s *vTMR,
-                         uint32_t *pHardCnt)
+                     VTMR_tmr_s *vTMR)
 {
-	vTMR->cnt = *vTMR->pHardCnt;
+	vTMR->cnt = (uint32_t) (((uint32_t) *vTMR->pHardCntHight << 16)
+	                        | *vTMR->pHardCntLow);
 }
 
-uint32_t VTMR_GetValueTimer(VTMR_tmr_s *vTMR,
-                        uint32_t *pHardCnt)
+uint32_t VTMR_GetValueTimer(
+                            VTMR_tmr_s *vTMR)
 {
-	return *vTMR->pHardCnt - vTMR->cnt;
+	return (uint32_t) (((uint32_t) *vTMR->pHardCntHight << 16)
+	                   | *vTMR->pHardCntLow)
+	       - vTMR->cnt;
 }
 
 //******************************************************************************

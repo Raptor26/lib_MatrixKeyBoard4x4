@@ -26,7 +26,11 @@
 
 typedef struct {
     volatile uint32_t cnt;
-	uint32_t *pHardCnt;
+
+	uint32_t *pHardCntHight,
+	        *pHardCntLow;
+
+	uint32_t hard32bitsCnt;
 
     enum {
         STOP,
@@ -49,6 +53,12 @@ extern void VTMR_StopVirtTimer(VTMR_tmr_s *vTMR);
 extern void VTMR_StartVirtTimer(VTMR_tmr_s *vTMR);
 extern uint32_t VTMR_GetValueVirtTimer(VTMR_tmr_s *vTMR);
 extern void VTMR_IntProcess(VTMR_tmr_s *vTMR);
+
+void VTMR_StartTimer(
+                     VTMR_tmr_s *vTMR);
+
+uint32_t VTMR_GetValueTimer(
+                            VTMR_tmr_s *vTMR);
 //******************************************************************************
 
 

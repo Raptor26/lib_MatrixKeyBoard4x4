@@ -31,33 +31,52 @@
 //******************************************************************************
 // Секция описания функций (сначала глобальных, потом локальных)
 
-void VTMR_RestartVirtTimer(VTMR_tmr_s *vTMR)
+void VTMR_RestartVirtTimer(
+                           VTMR_tmr_s *vTMR)
 {
     vTMR->state = RUNNING;
     vTMR->cnt = 0;
 }
 
-void VTMR_StopVirtTimer(VTMR_tmr_s *vTMR)
+void VTMR_StopVirtTimer(
+                        VTMR_tmr_s *vTMR)
 {
     vTMR->state = STOP;
 }
 
-void VTMR_StartVirtTimer(VTMR_tmr_s *vTMR)
+void VTMR_StartVirtTimer(
+                         VTMR_tmr_s *vTMR)
 {
     vTMR->state = RUNNING;
 }
 
-uint32_t VTMR_GetValueVirtTimer(VTMR_tmr_s *vTMR)
+uint32_t VTMR_GetValueVirtTimer(
+                                VTMR_tmr_s *vTMR)
 {
 	return vTMR->cnt;
 }
-void VTMR_IntProcess(VTMR_tmr_s *vTMR)
+void VTMR_IntProcess(
+                     VTMR_tmr_s *vTMR)
 {
     if (vTMR->state == RUNNING)
     {
         vTMR->cnt++;
     }
 }
+
+void VTMR_StartTimer(
+                         VTMR_tmr_s *vTMR,
+                         uint32_t *pHardCnt)
+{
+	vTMR->cnt = *vTMR->pHardCnt;
+}
+
+uint32_t VTMR_GetValueTimer(VTMR_tmr_s *vTMR,
+                        uint32_t *pHardCnt)
+{
+	return *vTMR->pHardCnt - vTMR->cnt;
+}
+
 //******************************************************************************
 
 

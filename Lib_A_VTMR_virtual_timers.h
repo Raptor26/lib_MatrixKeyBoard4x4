@@ -26,6 +26,7 @@
 
 typedef struct {
     volatile uint32_t cnt;
+	uint32_t *pHardCnt;
 
     enum {
         STOP,

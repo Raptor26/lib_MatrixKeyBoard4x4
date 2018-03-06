@@ -1,4 +1,4 @@
-/* 
+/*
  * File:   Lib_A_vtmr_virtual_timers.c
  * Author: m.isaev
  *
@@ -53,8 +53,9 @@ void VTMR_StartVirtTimer(
 uint32_t VTMR_GetValueVirtTimer(
                                 VTMR_tmr_s *vTMR)
 {
-	return vTMR->cnt;
+    return vTMR->cnt;
 }
+
 void VTMR_IntProcess(
                      VTMR_tmr_s *vTMR)
 {
@@ -64,19 +65,35 @@ void VTMR_IntProcess(
     }
 }
 
+/**
+ * @brief   Функция сбрасывает в нуль виртуальный счетчик;
+ * @param[in]   *vTMR:  Указатель на структуру, в которую будет записано 32-х
+ *                      битное значение аппаратного счетчика;
+ * @return None;
+ */
 void VTMR_StartTimer(
-                     VTMR_tmr_s *vTMR)
+                     VTMR_tmr_s *pVTMR)
 {
-	vTMR->cnt = (uint32_t) (((uint32_t) *vTMR->pHardCntHight << 16)
-	                        | *vTMR->pHardCntLow);
+    pVTMR->cnt = (uint32_t) (((uint32_t) * pVTMR->pHard16bitCntHight << 16)
+            | *pVTMR->pHard16bitCntLow);
 }
 
-uint32_t VTMR_GetValueTimer(
-                            VTMR_tmr_s *vTMR)
+/**
+ * @brief   Функция вычисляет временной интервал между вызовами функции
+ *          "VTMR_StartTimer" и "VTMR_GetTimerValue"
+ * @param[in,out]   *vTMR:  Указатель на структуру, в одном из полей которой
+ *                          записано 32-х битное значение аппаратного счетчика;
+ * @return  Временной интервал между вызовами функций "VTMR_StartTimer" и
+ *          "VTMR_GetTimerValue" в тиках аппаратного счетчика;
+ */
+uint32_t VTMR_GetTimerValue(
+                            VTMR_tmr_s *pVTMR)
 {
-	return (uint32_t) (((uint32_t) *vTMR->pHardCntHight << 16)
-	                   | *vTMR->pHardCntLow)
-	       - vTMR->cnt;
+    pVTMR->timeInterval = (uint32_t) (((uint32_t) * pVTMR->pHard16bitCntHight << 16)
+            | *pVTMR->pHard16bitCntLow)
+            - pVTMR->cnt;
+
+    return pVTMR->timeInterval;
 }
 
 //******************************************************************************

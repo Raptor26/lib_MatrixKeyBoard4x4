@@ -1,4 +1,4 @@
-/* 
+/*
  * File:   Lib_A_vtmr_virtual_timers.h
  * Author: m.isaev
  *
@@ -25,12 +25,24 @@
 // Секция определения типов
 
 typedef struct {
+    /**
+     * @brief   Переменная для отсчета временного интервала;
+     */
     volatile uint32_t cnt;
 
-	uint32_t *pHardCntHight,
-	        *pHardCntLow;
+    /**
+     * @brief   Указатели на аппаратные регистры 16-ти битных счетчиков;
+     *          (старшие 16 бит и младшие 16 бит)
+     */
+    uint32_t *pHard16bitCntHight,
+    *pHard16bitCntLow;
 
-	uint32_t hard32bitsCnt;
+    /**
+     * @brief   В данную переменную записывается временной интервал между
+     *          вызовами функции "VTMR_StartTimer" и "VTMR_GetValueTimer" в тиках
+     *          аппаратного счетчика;
+     */
+    uint32_t timeInterval;
 
     enum {
         STOP,
@@ -48,17 +60,27 @@ typedef struct {
 
 //******************************************************************************
 // Секция прототипов глобальных функций
-extern void VTMR_RestartVirtTimer(VTMR_tmr_s *vTMR);
-extern void VTMR_StopVirtTimer(VTMR_tmr_s *vTMR);
-extern void VTMR_StartVirtTimer(VTMR_tmr_s *vTMR);
-extern uint32_t VTMR_GetValueVirtTimer(VTMR_tmr_s *vTMR);
-extern void VTMR_IntProcess(VTMR_tmr_s *vTMR);
+/* ######################################################################### */
+/* <Функции виртуальных таймеров, инкремент которых происходит в прерывании> */
+/* ######################################################################### */
+extern void VTMR_RestartVirtTimer(
+        VTMR_tmr_s *vTMR);
+extern void VTMR_StopVirtTimer(
+        VTMR_tmr_s *vTMR);
+extern void VTMR_StartVirtTimer(
+        VTMR_tmr_s *vTMR);
+extern uint32_t VTMR_GetValueVirtTimer(
+        VTMR_tmr_s *vTMR);
+extern void VTMR_IntProcess(
+        VTMR_tmr_s *vTMR);
 
+/* ################################################################### */
+/* <Функции виртуальных таймеров, привязанных к аппаратному счетчику > */
+/* ################################################################### */
 void VTMR_StartTimer(
-                     VTMR_tmr_s *vTMR);
-
-uint32_t VTMR_GetValueTimer(
-                            VTMR_tmr_s *vTMR);
+        VTMR_tmr_s *pVTMR);
+uint32_t VTMR_GetTimerValue(
+        VTMR_tmr_s *pVTMR);
 //******************************************************************************
 
 

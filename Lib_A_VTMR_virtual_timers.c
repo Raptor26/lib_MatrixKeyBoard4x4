@@ -66,36 +66,51 @@ void VTMR_IntProcess(
 }
 
 /**
- * @brief   Функция сбрасывает в нуль виртуальный счетчик;
- * @param[in]   *vTMR:  Указатель на структуру, в которую будет записано 32-х
- *                      битное значение аппаратного счетчика;
+ * @brief   Функция сбрасывает в нуль виртуальный таймер;
+ * @param[in]   *vTMR:  Указатель на структуру виртуального таймера;
  * @return None;
  */
 void VTMR_StartTimer(
                      VTMR_tmr_s *pVTMR)
 {
-    pVTMR->cnt = (uint32_t) (((uint32_t) * pVTMR->pHard16bitCntHight << 16)
-            | *pVTMR->pHard16bitCntLow);
+    pVTMR->cnt = (uint32_t) (((uint32_t) * pVTMR->pHighCntReg << 16)
+            | *pVTMR->pLowCntReg);
 }
 
 /**
  * @brief   Функция вычисляет временной интервал между вызовами функции
  *          "VTMR_StartTimer" и "VTMR_GetTimerValue"
- * @param[in,out]   *vTMR:  Указатель на структуру, в одном из полей которой
- *                          записано 32-х битное значение аппаратного счетчика;
+ * @param[in,out]   *vTMR:  Указатель на структуру виртуального таймера;
  * @return  Временной интервал между вызовами функций "VTMR_StartTimer" и
  *          "VTMR_GetTimerValue" в тиках аппаратного счетчика;
  */
 uint32_t VTMR_GetTimerValue(
                             VTMR_tmr_s *pVTMR)
 {
-    pVTMR->timeInterval = (uint32_t) (((uint32_t) * pVTMR->pHard16bitCntHight << 16)
-            | *pVTMR->pHard16bitCntLow)
+    pVTMR->timeInterval = (uint32_t) (((uint32_t) * pVTMR->pHighCntReg << 16)
+            | *pVTMR->pLowCntReg)
             - pVTMR->cnt;
 
     return pVTMR->timeInterval;
 }
 
+/**
+ * @brief   Функция инициализирует структуру виртуального таймера;
+ * @param[in]   *pVTMR: Указатель на структуру виртуального таймера;
+ * @param[in]   *pHighCntReg:   Указатель на старшие 16 бит аппаратного счетчика:
+ * @param[in]   *pLowCntReg:    Указатель на младшие 16 бит аппаратного счетчика:
+ * @return  None;
+ */
+void VTMR_InitTimerStruct(
+                          VTMR_tmr_s *pVTMR,
+                          uint32_t *pHighCntReg,
+                          uint32_t *pLowCntReg)
+{
+    pVTMR->pHighCntReg = pHighCntReg;
+    pVTMR->pLowCntReg = pLowCntReg;
+    pVTMR->cnt = 0;
+    pVTMR->timeInterval = 0;
+}
 //******************************************************************************
 
 

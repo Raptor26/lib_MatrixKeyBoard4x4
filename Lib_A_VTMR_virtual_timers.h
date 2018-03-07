@@ -31,11 +31,14 @@ typedef struct {
     volatile uint32_t cnt;
 
     /**
-     * @brief   Указатели на аппаратные регистры 16-ти битных счетчиков;
-     *          (старшие 16 бит и младшие 16 бит)
+     * @brief   Указатель на старшие 16 бит аппаратного счетчика;
      */
-    uint32_t *pHard16bitCntHight,
-    *pHard16bitCntLow;
+    uint32_t *pHighCntReg;
+
+    /**
+     * @brief   Указатель на младшие 16 бит аппаратного счетчика;
+     */
+    uint32_t *pLowCntReg;
 
     /**
      * @brief   В данную переменную записывается временной интервал между
@@ -65,12 +68,16 @@ typedef struct {
 /* ######################################################################### */
 extern void VTMR_RestartVirtTimer(
         VTMR_tmr_s *vTMR);
+
 extern void VTMR_StopVirtTimer(
         VTMR_tmr_s *vTMR);
+
 extern void VTMR_StartVirtTimer(
         VTMR_tmr_s *vTMR);
+
 extern uint32_t VTMR_GetValueVirtTimer(
         VTMR_tmr_s *vTMR);
+
 extern void VTMR_IntProcess(
         VTMR_tmr_s *vTMR);
 
@@ -79,8 +86,14 @@ extern void VTMR_IntProcess(
 /* ################################################################### */
 void VTMR_StartTimer(
         VTMR_tmr_s *pVTMR);
+
 uint32_t VTMR_GetTimerValue(
         VTMR_tmr_s *pVTMR);
+
+void VTMR_InitTimerStruct(
+        VTMR_tmr_s *pVTMR,
+        uint32_t *pHighCntReg,
+        uint32_t *pLowCntReg);
 //******************************************************************************
 
 

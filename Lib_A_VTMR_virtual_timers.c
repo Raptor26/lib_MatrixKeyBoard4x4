@@ -34,20 +34,20 @@
 void VTMR_RestartVirtTimer(
                            VTMR_tmr_s *vTMR)
 {
-    vTMR->state = RUNNING;
+	vTMR->state = VTMR_RUNNING;
     vTMR->cnt = 0;
 }
 
 void VTMR_StopVirtTimer(
                         VTMR_tmr_s *vTMR)
 {
-    vTMR->state = STOP;
+	vTMR->state = VTMR_STOP;
 }
 
 void VTMR_StartVirtTimer(
                          VTMR_tmr_s *vTMR)
 {
-    vTMR->state = RUNNING;
+	vTMR->state = VTMR_RUNNING;
 }
 
 uint32_t VTMR_GetValueVirtTimer(
@@ -59,7 +59,7 @@ uint32_t VTMR_GetValueVirtTimer(
 void VTMR_IntProcess(
                      VTMR_tmr_s *vTMR)
 {
-    if (vTMR->state == RUNNING)
+	if (vTMR->state == VTMR_RUNNING)
     {
         vTMR->cnt++;
     }

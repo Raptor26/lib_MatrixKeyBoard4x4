@@ -34,20 +34,20 @@
 void VTMR_RestartVirtTimer(
                            VTMR_tmr_s *vTMR)
 {
-	vTMR->state = VTMR_RUNNING;
+    vTMR->state = VTMR_RUNNING;
     vTMR->cnt = 0;
 }
 
 void VTMR_StopVirtTimer(
                         VTMR_tmr_s *vTMR)
 {
-	vTMR->state = VTMR_STOP;
+    vTMR->state = VTMR_STOP;
 }
 
 void VTMR_StartVirtTimer(
                          VTMR_tmr_s *vTMR)
 {
-	vTMR->state = VTMR_RUNNING;
+    vTMR->state = VTMR_RUNNING;
 }
 
 uint32_t VTMR_GetValueVirtTimer(
@@ -59,7 +59,7 @@ uint32_t VTMR_GetValueVirtTimer(
 void VTMR_IntProcess(
                      VTMR_tmr_s *vTMR)
 {
-	if (vTMR->state == VTMR_RUNNING)
+    if (vTMR->state == VTMR_RUNNING)
     {
         vTMR->cnt++;
     }
@@ -90,6 +90,30 @@ uint32_t VTMR_GetTimerValue(
     pVTMR->timeInterval = (uint32_t) (((uint32_t) * pVTMR->pHighCntReg << 16)
             | *pVTMR->pLowCntReg)
             - pVTMR->cnt;
+
+    return pVTMR->timeInterval;
+}
+
+/**
+ * @brief   Функция вычисляет временной интервал между вызовами функции
+ *          "VTMR_StartTimer" и "VTMR_GetTimerValue" и возвращает наибольшее
+ *          значение временного интервала;
+ * @param[in,out]   *vTMR:  Указатель на структуру виртуального таймера;
+ * @return  Наибольший временной интервал между вызовами функций "VTMR_StartTimer" и
+ *          "VTMR_GetTimerValue" в тиках аппаратного счетчика;
+ */
+uint32_t VTMR_GetMaxTimerValue(
+                               VTMR_tmr_s *pVTMR)
+{
+    uint32_t timeInterval = (uint32_t) (((uint32_t) * pVTMR->pHighCntReg << 16)
+            | *pVTMR->pLowCntReg)
+            - pVTMR->cnt;
+
+    // Если новое значение временного интервала больше предыдущего:
+    if (timeInterval > pVTMR->timeInterval)
+    {
+        pVTMR->timeInterval = timeInterval;
+    }
 
     return pVTMR->timeInterval;
 }

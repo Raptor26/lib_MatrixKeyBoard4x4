@@ -1,8 +1,108 @@
-/*
- * File:   Lib_A_vtmr_virtual_timers.c
- * Author: m.isaev
+/**
+ * @file    "Lib_A_VTMR_virtual_timers.c"
+ * @author  Isaev Mickle;
+ * @version Beta;
+ * @date    19.03.2018
+ * @brief   Библиотека содержит функции для работы с виртуальными таймерами.
+ *          Функции в данной библиотеке делятся на 2 категории:
+ *------------------------------------------------------------------------------
+ *      1.      Функции виртуальных таймеров, ведущие отсчет времени через
+ *              программный инкремент виртуального таймера (как правило,
+ *              в прерывании от аппаратного таймера);
+ *      @see    void VTMR_RestartVirtTimer(VTMR_tmr_s *vTMR);
+ *              void VTMR_StopVirtTimer(VTMR_tmr_s *vTMR);
+ *              void VTMR_StartVirtTimer(VTMR_tmr_s *vTMR);
+ *              uint32_t VTMR_GetValueVirtTimer(VTMR_tmr_s *vTMR);
+ *              void VTMR_IntProcess(VTMR_tmr_s *vTMR);
+ *      @note   При таком способе отсчета времени инкремент виртуального таймера
+ *              выполняется при вызове функции VTMR_IntProcess();
+ *      @code
+ *          // Объявление глобальной переменной
+ *          VTMR_tmr_s myVirtTimerStruct;
+ *          uint32_t myVirtTimerValue;
  *
- * Created on 4 октября 2017 г., 9:33
+ *          int main(void)
+ *          {
+ *              ...
+ *              VTMR_StartVirtTimer(&myVirtTimerStruct);
+ *              ...
+ *              while(1)
+ *              {
+ *                  // Разрешает инктемент виртуального таймера при вызове
+ *                  // функции VTMR_IntProcess() и сбрасывает значение
+ *                  // счетчика в нуль - старт виртуального таймера;
+ *                  VTMR_RestartVirtTimer(&myVirtTimerStruct);
+ *                  ...
+ *                  // Получение количества вызова функии VTMR_IntProcess();
+ *                  // (получение количества прерываний  "void TIMER_1_INTERRUPT(void)")
+ *                  myVirtTimerValue = VTMR_GetValueVirtTimer(&myVirtTimerStruct);
+ *
+ *                  // Аналогичный результат даст такая запись;
+ *                  myVirtTimerValue = myVirtTimerStruct.cnt;
+ *
+ *                  // Запрещает инктемент виртуального таймера при вызове
+ *                  // функции VTMR_IntProcess() - остановка виртуального таймера;
+ *                  VTMR_StopVirtTimer(&myVirtTimerStruct);
+ *              }
+ *          }
+ *
+ *          void TIMER_1_INTERRUPT(void)
+ *          {
+ *              ...
+ *              VTMR_IntProcess(&myVirtTimerStruct);
+ *          }
+ *      @endcode
+ *------------------------------------------------------------------------------
+ *
+ *
+ *------------------------------------------------------------------------------
+ *      2.      функции виртуальных таймеров, ведущие отсчет времени с использованием
+ *              аппаратного таймера, сконфигурированного для работы в 32-х битном режиме.
+ *      @note   При таком способе отсчета времени библиотека не использует прерывания.
+ *      @see    void VTMR_StartTimer(VTMR_tmr_s *pVTMR);
+ *              uint32_t VTMR_GetTimerValue(VTMR_tmr_s *pVTMR);
+ *              uint32_t VTMR_GetMaxTimerValue(VTMR_tmr_s *pVTMR);
+ *              void VTMR_InitTimerStruct(VTMR_tmr_s *pVTMR);
+ *      @code
+ *          // Объявление глобальной переменной
+ *          VTMR_tmr_s myVirtTimerStruct;
+ *          uint32_t myVirtTimerValue;
+ *
+ *          int main(void)
+ *          {
+ *              ...
+ *              // Пример для микрокнтроллеров PIC:
+ *              // где TMR9 - указатель на старшие 16 бит аппаратного счетчика;
+ *                     TMR8 - указатель на младшие 16 бит аппаратного счетчика;
+ *              VTMR_InitTimerStruct(&myVirtTimerStruct,
+ *                                   (uint32_t*) &TMR9,
+ *                                   (uint32_t*) &TMR8);
+ *
+ *              // Пример для микроконтроллеров STM32;
+ *              // где TIM3->CNT - указатель на старшие 16 бит аппаратного счетчика;
+ *                     TIM4->CNT - указатель на младшие 16 бит аппаратного счетчика;
+ *              VTMR_InitTimerStruct(&myVirtTimerStruct,
+ *                                   (uint32_t*) &TIM3->CNT,
+ *                                   (uint32_t*) &TIM4->CNT);
+ *              ...
+ *              while(1)
+ *              {
+ *                  // Запись в переменную счетчика текущего значения
+ *                  // аппаратного 32-х битного счетчика;
+ *                  // @see VTMR_tmr_s;
+ *                  VTMR_StartTimer(&myVirtTimerStruct);
+ *                  ...
+ *                  // Определение разницы между текущим значением аппаратного
+ *                  // 32-х битного счетчика и значением переменной счетчика в
+ *                  // структуре myVirtTimerStruct.
+ *                  // В результате имеем количество тиков аппаратного счетчика
+ *                  // между вызовами функций VTMR_StartTimer() и VTMR_GetTimerValue();
+ *                  // @see VTMR_tmr_s;
+ *                  myVirtTimerValue = VTMR_GetTimerValue(&myVirtTimerStruct);
+ *              }
+ *          }
+ *      @endcode
+ *------------------------------------------------------------------------------
  */
 
 //******************************************************************************
@@ -64,6 +164,10 @@ void VTMR_IntProcess(
         vTMR->cnt++;
     }
 }
+
+/* ################################################################## */
+/* <Функции виртуальных таймеров, привязанных к аппаратному счетчику> */
+/* ################################################################## */
 
 /**
  * @brief   Функция сбрасывает в нуль виртуальный таймер;

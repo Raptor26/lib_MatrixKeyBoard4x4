@@ -3,6 +3,7 @@
  * @author  Isaev Mickle;
  * @version Beta;
  * @date    19.03.2018
+ * #
  * @brief   Библиотека содержит функции для работы с виртуальными таймерами.
  *          Функции в данной библиотеке делятся на 2 категории:
  *------------------------------------------------------------------------------
@@ -17,30 +18,32 @@
  *      @note   При таком способе отсчета времени инкремент виртуального таймера
  *              выполняется при вызове функции VTMR_IntProcess();
  *      @code
- *          // Объявление глобальной переменной
+ *          // Объявление глобальных переменных
  *          VTMR_tmr_s myVirtTimerStruct;
  *          uint32_t myVirtTimerValue;
  *
  *          int main(void)
  *          {
  *              ...
+ *              // Разрешает инкремент виртуального таймера при вызове
+ *              // функции VTMR_IntProcess();
  *              VTMR_StartVirtTimer(&myVirtTimerStruct);
  *              ...
  *              while(1)
  *              {
- *                  // Разрешает инктемент виртуального таймера при вызове
+ *                  // Разрешает инкремент виртуального таймера при вызове
  *                  // функции VTMR_IntProcess() и сбрасывает значение
- *                  // счетчика в нуль - старт виртуального таймера;
+ *                  // счетчика в нуль - перезапуск виртуального таймера;
  *                  VTMR_RestartVirtTimer(&myVirtTimerStruct);
  *                  ...
- *                  // Получение количества вызова функии VTMR_IntProcess();
+ *                  // Получение количества вызова функции VTMR_IntProcess();
  *                  // (получение количества прерываний  "void TIMER_1_INTERRUPT(void)")
  *                  myVirtTimerValue = VTMR_GetValueVirtTimer(&myVirtTimerStruct);
  *
  *                  // Аналогичный результат даст такая запись;
  *                  myVirtTimerValue = myVirtTimerStruct.cnt;
  *
- *                  // Запрещает инктемент виртуального таймера при вызове
+ *                  // Запрещает инкремент виртуального таймера при вызове
  *                  // функции VTMR_IntProcess() - остановка виртуального таймера;
  *                  VTMR_StopVirtTimer(&myVirtTimerStruct);
  *              }
@@ -64,14 +67,14 @@
  *              uint32_t VTMR_GetMaxTimerValue(VTMR_tmr_s *pVTMR);
  *              void VTMR_InitTimerStruct(VTMR_tmr_s *pVTMR);
  *      @code
- *          // Объявление глобальной переменной
+ *          // Объявление глобальных переменных
  *          VTMR_tmr_s myVirtTimerStruct;
  *          uint32_t myVirtTimerValue;
  *
  *          int main(void)
  *          {
  *              ...
- *              // Пример для микрокнтроллеров PIC:
+ *              // Пример для микроконтроллеров PIC:
  *              // где TMR9 - указатель на старшие 16 бит аппаратного счетчика;
  *                     TMR8 - указатель на младшие 16 бит аппаратного счетчика;
  *              VTMR_InitTimerStruct(&myVirtTimerStruct,
@@ -184,7 +187,7 @@ void VTMR_StartTimer(
 /**
  * @brief   Функция вычисляет временной интервал между вызовами функции
  *          "VTMR_StartTimer" и "VTMR_GetTimerValue"
- * @param[in,out]   *vTMR:  Указатель на структуру виртуального таймера;
+ * @param[in,out]   *pVTMR: Указатель на структуру виртуального таймера;
  * @return  Временной интервал между вызовами функций "VTMR_StartTimer" и
  *          "VTMR_GetTimerValue" в тиках аппаратного счетчика;
  */
@@ -202,7 +205,7 @@ uint32_t VTMR_GetTimerValue(
  * @brief   Функция вычисляет временной интервал между вызовами функции
  *          "VTMR_StartTimer" и "VTMR_GetTimerValue" и возвращает наибольшее
  *          значение временного интервала;
- * @param[in,out]   *vTMR:  Указатель на структуру виртуального таймера;
+ * @param[in,out]   *pVTMR: Указатель на структуру виртуального таймера;
  * @return  Наибольший временной интервал между вызовами функций "VTMR_StartTimer" и
  *          "VTMR_GetTimerValue" в тиках аппаратного счетчика;
  */
@@ -231,8 +234,8 @@ uint32_t VTMR_GetMaxTimerValue(
  */
 void VTMR_InitTimerStruct(
                           VTMR_tmr_s *pVTMR,
-                          uint32_t *pHighCntReg,
-                          uint32_t *pLowCntReg)
+                          uint16_t *pHighCntReg,
+                          uint16_t *pLowCntReg)
 {
     pVTMR->pHighCntReg = pHighCntReg;
     pVTMR->pLowCntReg = pLowCntReg;

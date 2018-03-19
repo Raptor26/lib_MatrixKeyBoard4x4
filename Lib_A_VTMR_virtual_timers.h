@@ -36,12 +36,12 @@ typedef struct {
     /**
      * @brief   Указатель на старшие 16 бит аппаратного счетчика;
      */
-    uint32_t *pHighCntReg;
+    uint16_t *pHighCntReg;
 
     /**
      * @brief   Указатель на младшие 16 бит аппаратного счетчика;
      */
-    uint32_t *pLowCntReg;
+    uint16_t *pLowCntReg;
 
     /**
      * @brief   В данную переменную записывается временной интервал между
@@ -96,10 +96,10 @@ extern uint32_t VTMR_GetTimerValue(
 extern uint32_t VTMR_GetMaxTimerValue(
         VTMR_tmr_s *pVTMR);
 
-void VTMR_InitTimerStruct(
+extern void VTMR_InitTimerStruct(
         VTMR_tmr_s *pVTMR,
-        uint32_t *pHighCntReg,
-        uint32_t *pLowCntReg);
+        uint16_t *pHighCntReg,
+        uint16_t *pLowCntReg);
 //******************************************************************************
 
 

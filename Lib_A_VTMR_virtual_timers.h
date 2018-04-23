@@ -69,34 +69,43 @@ typedef struct {
 /* ######################################################################### */
 /* <Функции виртуальных таймеров, инкремент которых происходит в прерывании> */
 /* ######################################################################### */
-extern void VTMR_RestartVirtTimer(
+extern void 
+VTMR_RestartVirtTimer(
         VTMR_tmr_s *vTMR);
 
-extern void VTMR_StopVirtTimer(
+extern void
+VTMR_StopVirtTimer(
         VTMR_tmr_s *vTMR);
 
-extern void VTMR_StartVirtTimer(
+extern void
+VTMR_StartVirtTimer(
         VTMR_tmr_s *vTMR);
 
-extern uint32_t VTMR_GetValueVirtTimer(
+extern uint32_t
+VTMR_GetValueVirtTimer(
         VTMR_tmr_s *vTMR);
 
-extern void VTMR_IntProcess(
+extern void
+VTMR_IntProcess(
         VTMR_tmr_s *vTMR);
 
 /* ################################################################## */
 /* <Функции виртуальных таймеров, привязанных к аппаратному счетчику> */
 /* ################################################################## */
-extern void VTMR_StartTimer(
+extern void
+VTMR_StartTimer(
         VTMR_tmr_s *pVTMR);
 
-extern uint32_t VTMR_GetTimerValue(
+extern uint32_t
+VTMR_GetTimerValue(
         VTMR_tmr_s *pVTMR);
 
-extern uint32_t VTMR_GetMaxTimerValue(
+extern uint32_t
+VTMR_GetMaxTimerValue(
         VTMR_tmr_s *pVTMR);
 
-extern void VTMR_InitTimerStruct(
+extern void
+VTMR_InitTimerStruct(
         VTMR_tmr_s *pVTMR,
         const uint16_t * const pHighCntReg,
         const uint16_t * const pLowCntReg);

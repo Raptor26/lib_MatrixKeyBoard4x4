@@ -212,8 +212,12 @@ VTMR_IntProcess (
 void
 VTMR_StartTimer(VTMR_tmr_s *pVTMR)
 {
-  pVTMR->cnt = (uint32_t) (((uint32_t) * pVTMR->pHighCntReg << 16)
-                           | *pVTMR->pLowCntReg);
+  uint32_t highCnt = (uint32_t) *pVTMR->pHighCntReg,
+	lowCnt = (uint32_t) *pVTMR->pLowCntReg;
+  
+  pVTMR->cnt =
+	(((highCnt << 16) & 0xFFFF0000)
+	| (lowCnt & 0x0000FFFF));
 }
 
 /**
@@ -226,9 +230,12 @@ VTMR_StartTimer(VTMR_tmr_s *pVTMR)
 uint32_t
 VTMR_GetTimerValue(VTMR_tmr_s *pVTMR)
 {
-  pVTMR->timeInterval = (uint32_t) (((uint32_t) * pVTMR->pHighCntReg << 16)
-                                    | *pVTMR->pLowCntReg)
-          - pVTMR->cnt;
+  uint32_t highCnt = (uint32_t) *pVTMR->pHighCntReg,
+	lowCnt = (uint32_t) *pVTMR->pLowCntReg;
+  
+  pVTMR->timeInterval =
+	(((highCnt << 16) & 0xFFFF0000)
+	| (lowCnt & 0x0000FFFF)) - pVTMR->cnt;
 
   return pVTMR->timeInterval;
 }
@@ -244,15 +251,19 @@ VTMR_GetTimerValue(VTMR_tmr_s *pVTMR)
 uint32_t
 VTMR_GetMaxTimerValue(VTMR_tmr_s *pVTMR)
 {
-  uint32_t timeInterval = (uint32_t) (((uint32_t) * pVTMR->pHighCntReg << 16)
-                                      | *pVTMR->pLowCntReg) - pVTMR->cnt;
+   uint32_t highCnt = (uint32_t) *pVTMR->pHighCntReg,
+	lowCnt = (uint32_t) *pVTMR->pLowCntReg;
+  
+  pVTMR->timeInterval =
+	(((highCnt << 16) & 0xFFFF0000)
+	| (lowCnt & 0x0000FFFF)) - pVTMR->cnt;
 
   // Если новое значение временного интервала больше предыдущего:
-  if (timeInterval > pVTMR->timeInterval)
+  if (pVTMR->timeInterval > pVTMR->timeIntervalMax)
     {
-      pVTMR->timeInterval = timeInterval;
+      pVTMR->timeIntervalMax = pVTMR->timeInterval;
     }
-  return pVTMR->timeInterval;
+  return  pVTMR->timeIntervalMax;
 }
 
 /**

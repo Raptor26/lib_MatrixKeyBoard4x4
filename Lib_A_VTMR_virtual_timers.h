@@ -31,17 +31,17 @@ typedef struct {
     /**
      * @brief   Переменная для записи текущего значения аппаратного счетчика;
      */
-    volatile uint32_t cnt;
+     uint32_t volatile cnt;
 
     /**
      * @brief   Указатель на старшие 16 бит аппаратного счетчика;
      */
-    const uint16_t *pHighCntReg;
+    const uint16_t volatile const *pHighCntReg;
 
     /**
      * @brief   Указатель на младшие 16 бит аппаратного счетчика;
      */
-    const uint16_t *pLowCntReg;
+    const uint16_t volatile const *pLowCntReg;
 
     /**
      * @brief   В данную переменную записывается временной интервал между
@@ -50,11 +50,13 @@ typedef struct {
      */
     uint32_t timeInterval;
 
+    uint32_t timeIntervalMax;
+    
     /**
      * @brief   Текущее состояние виртуального таймера;
      * @note    Запущен или остановлен;
      */
-    VTMR_tmr_status_e state;
+     VTMR_tmr_status_e volatile state;
 } VTMR_tmr_s;
 //******************************************************************************
 

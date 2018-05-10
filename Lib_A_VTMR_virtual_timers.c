@@ -234,8 +234,8 @@ VTMR_GetTimerValue(VTMR_tmr_s *pVTMR)
 	lowCnt = (uint32_t) *pVTMR->pLowCntReg;
   
   pVTMR->timeInterval =
-	(((highCnt << 16) & 0xFFFF0000)
-	| (lowCnt & 0x0000FFFF)) - pVTMR->cnt;
+	((((highCnt << 16) & 0xFFFF0000)
+	| (lowCnt & 0x0000FFFF))) - pVTMR->cnt;
 
   return pVTMR->timeInterval;
 }

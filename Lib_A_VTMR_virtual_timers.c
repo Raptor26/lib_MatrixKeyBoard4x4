@@ -163,41 +163,41 @@
 
 void
 VTMR_RestartVirtTimer (
-                       VTMR_tmr_s *vTMR)
+	VTMR_tmr_s *vTMR)
 {
-  vTMR->state = VTMR_RUNNING;
-  vTMR->timeInterval = 0;
+	vTMR->state = VTMR_RUNNING;
+	vTMR->timeInterval = 0;
 }
 
 void
 VTMR_StopVirtTimer (
-                    VTMR_tmr_s *vTMR)
+	VTMR_tmr_s *vTMR)
 {
-  vTMR->state = VTMR_STOP;
+	vTMR->state = VTMR_STOP;
 }
 
 void
 VTMR_StartVirtTimer (
-                     VTMR_tmr_s *vTMR)
+	VTMR_tmr_s *vTMR)
 {
-  vTMR->state = VTMR_RUNNING;
+	vTMR->state = VTMR_RUNNING;
 }
 
 uint32_t
 VTMR_GetValueVirtTimer (
-                        VTMR_tmr_s *vTMR)
+	VTMR_tmr_s *vTMR)
 {
-  return vTMR->timeInterval;
+	return vTMR->timeInterval;
 }
 
 void
 VTMR_IntProcess (
-                 VTMR_tmr_s *vTMR)
+	VTMR_tmr_s *vTMR)
 {
-  if (vTMR->state == VTMR_RUNNING)
-    {
-      vTMR->timeInterval++;
-    }
+	if (vTMR->state == VTMR_RUNNING)
+	{
+		vTMR->timeInterval++;
+	}
 }
 
 /* ################################################################## */
@@ -205,83 +205,121 @@ VTMR_IntProcess (
 /* ################################################################## */
 
 /**
- * @brief   Функция сбрасывает в нуль виртуальный таймер;
- * @param[in]   *vTMR:  Указатель на структуру виртуального таймера;
- * @return None;
+ * @brief   Функция сбрасывает в нуль виртуальный таймер
+ * @param[in]   *vTMR:  Указатель на структуру виртуального таймера
+ * @return None
  */
 void
-VTMR_StartTimer(VTMR_tmr_s *pVTMR)
+VTMR_StartTimer(
+	VTMR_tmr_s *pVTMR)
 {
-  uint32_t highCnt = (uint32_t) *pVTMR->pHighCntReg,
-	lowCnt = (uint32_t) *pVTMR->pLowCntReg;
-  
-  pVTMR->cnt =
-	(((highCnt << 16) & 0xFFFF0000)
-	| (lowCnt & 0x0000FFFF));
+	/* Если режим работы таймера 32-х битный */
+	if (pVTMR->pHighCntReg != NULL)
+	{
+		uint32_t highCnt = (uint32_t) * pVTMR->pHighCntReg,
+				 lowCnt = (uint32_t) * pVTMR->pLowCntReg;
+
+		pVTMR->cnt =
+			(((highCnt << 16) & 0xFFFF0000)
+			 | (lowCnt & 0x0000FFFF));
+	}
+	/* Иначе, если режим работы таймера 16-ти битный */
+	else
+	{
+		pVTMR->cnt = (uint32_t) * pVTMR->pLowCntReg;
+	}
 }
 
 /**
  * @brief   Функция вычисляет временной интервал между вызовами функции
- *          "VTMR_StartTimer" и "VTMR_GetTimerValue"
- * @param[in,out]   *pVTMR: Указатель на структуру виртуального таймера;
+ *          "VTMR_StartTimer()" и "VTMR_GetTimerValue()"
+ * @param[in,out]   *pVTMR: Указатель на структуру виртуального таймера
  * @return  Временной интервал между вызовами функций "VTMR_StartTimer" и
- *          "VTMR_GetTimerValue" в тиках аппаратного счетчика;
+ *          "VTMR_GetTimerValue" в тиках аппаратного счетчика
  */
 uint32_t
-VTMR_GetTimerValue(VTMR_tmr_s *pVTMR)
+VTMR_GetTimerValue(
+	VTMR_tmr_s *pVTMR)
 {
-  uint32_t highCnt = (uint32_t) *pVTMR->pHighCntReg,
-	lowCnt = (uint32_t) *pVTMR->pLowCntReg;
-  
-  pVTMR->timeInterval =
-	((((highCnt << 16) & 0xFFFF0000)
-	| (lowCnt & 0x0000FFFF))) - pVTMR->cnt;
+	/* Если режим работы таймера 32-х битный */
+	if (pVTMR->pHighCntReg != NULL)
+	{
+		uint32_t highCnt = (uint32_t) * pVTMR->pHighCntReg,
+				 lowCnt = (uint32_t) * pVTMR->pLowCntReg;
 
-  return pVTMR->timeInterval;
+		uint32_t cnt32Bit =
+			(((highCnt << 16) & 0xFFFF0000)
+			 | (lowCnt & 0x0000FFFF)) - pVTMR->cnt;
+
+		/* Если было обнуление аппаратного счетчика */
+		if (pVTMR->cnt >= cnt32Bit)
+		{
+			pVTMR->timeInterval =
+				VTMR_32BIT_CNT_MAX_VAL - pVTMR->cnt + cnt32Bit;
+		}
+		else
+		{
+			pVTMR->timeInterval =
+				cnt32Bit - pVTMR->cnt;
+		}
+	}
+	/* Иначе, если режим работы таймера 16-ти битный */
+	else
+	{
+		/* Если было обнуление аппаратного счетчика */
+		if (pVTMR->cnt >= *pVTMR->pLowCntReg)
+		{
+			pVTMR->timeInterval =
+				((uint32_t) (((uint16_t)65535u - (uint16_t) pVTMR->cnt) + (uint16_t) * pVTMR->pLowCntReg) & 0x0000FFFF);
+		}
+		else
+		{
+			pVTMR->timeInterval =
+				((uint32_t) ((uint16_t) * pVTMR->pLowCntReg - (uint16_t) pVTMR->cnt) & 0x0000FFFF);
+		}
+	}
+	return pVTMR->timeInterval;
 }
 
 /**
- * @brief   Функция вычисляет временной интервал между вызовами функции
- *          "VTMR_StartTimer" и "VTMR_GetTimerValue" и возвращает наибольшее
- *          значение временного интервала;
- * @param[in,out]   *pVTMR: Указатель на структуру виртуального таймера;
+ * @brief   Функция вычисляет максимальный временной интервал между вызовами функции
+ *          "VTMR_StartTimer()" и "VTMR_GetTimerValue()"
+ * @param[in,out]   *pVTMR: Указатель на структуру виртуального таймера
  * @return  Наибольший временной интервал между вызовами функций "VTMR_StartTimer" и
- *          "VTMR_GetTimerValue" в тиках аппаратного счетчика;
+ *          "VTMR_GetTimerValue" в тиках аппаратного счетчика
  */
 uint32_t
-VTMR_GetMaxTimerValue(VTMR_tmr_s *pVTMR)
+VTMR_GetMaxTimerValue(
+	VTMR_tmr_s *pVTMR)
 {
-   uint32_t highCnt = (uint32_t) *pVTMR->pHighCntReg,
-	lowCnt = (uint32_t) *pVTMR->pLowCntReg;
-  
-  pVTMR->timeInterval =
-	(((highCnt << 16) & 0xFFFF0000)
-	| (lowCnt & 0x0000FFFF)) - pVTMR->cnt;
+	VTMR_GetTimerValue(pVTMR);
 
-  // Если новое значение временного интервала больше предыдущего:
-  if (pVTMR->timeInterval > pVTMR->timeIntervalMax)
-    {
-      pVTMR->timeIntervalMax = pVTMR->timeInterval;
-    }
-  return  pVTMR->timeIntervalMax;
+	// Если новое значение временного интервала больше предыдущего:
+	if (pVTMR->timeInterval > pVTMR->timeIntervalMax)
+	{
+		pVTMR->timeIntervalMax = pVTMR->timeInterval;
+	}
+	return  pVTMR->timeIntervalMax;
 }
 
 /**
- * @brief   Функция инициализирует структуру виртуального таймера;
- * @param[in]   *pVTMR: Указатель на структуру виртуального таймера;
- * @param[in]   *pHighCntReg:   Указатель на старшие 16 бит аппаратного счетчика:
- * @param[in]   *pLowCntReg:    Указатель на младшие 16 бит аппаратного счетчика:
- * @return  None;
+ * @brief   Функция инициализирует структуру виртуального таймера
+ * @param[in]   *pVTMR: Указатель на структуру виртуального таймера
+ * @param[in]   *pHighCntReg:   Указатель на старшие 16 бит аппаратного счетчика
+ * @param[in]   *pLowCntReg:    Указатель на младшие 16 бит аппаратного счетчика
+ * @return  None
  */
 void
-VTMR_InitTimerStruct(VTMR_tmr_s *pVTMR,
-                     const uint16_t * const pHighCntReg,
-                     const uint16_t * const pLowCntReg)
+VTMR_InitTimerStruct(
+	VTMR_tmr_s *pVTMR,
+	const uint16_t * const pHighCntReg,
+	const uint16_t * const pLowCntReg)
 {
-  pVTMR->pHighCntReg = pHighCntReg;
-  pVTMR->pLowCntReg = pLowCntReg;
-  pVTMR->cnt = 0;
-  pVTMR->timeInterval = 0;
+	pVTMR->pHighCntReg = pHighCntReg;
+	pVTMR->pLowCntReg = pLowCntReg;
+	pVTMR->cnt = 0;
+	pVTMR->timeInterval = 0;
+	pVTMR->timeIntervalMax = 0;
 }
 //******************************************************************************
 

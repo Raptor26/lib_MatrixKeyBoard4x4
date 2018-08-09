@@ -85,33 +85,43 @@
  *              // где TMR9 - указатель на старшие 16 бит аппаратного счетчика;
  *                     TMR8 - указатель на младшие 16 бит аппаратного счетчика;
  *              VTMR_InitTimerStruct(&myVirtTimer1CntStruct,
- *                                   (uint32_t*) &TMR9,
- *                                   (uint32_t*) &TMR8);
+ *                                   (uint16_t*) &TMR9,
+ *                                   (uint16_t*) &TMR8);
  *              VTMR_InitTimerStruct(&myVirtTimer2CntStruct,
- *                                   (uint32_t*) &TMR9,
- *                                   (uint32_t*) &TMR8);
+ *                                   (uint16_t*) &TMR9,
+ *                                   (uint16_t*) &TMR8);
  *
  *              // Пример инициализации для микроконтроллеров STM32;
  *              // где TIM3->CNT - указатель на старшие 16 бит аппаратного счетчика;
  *                     TIM4->CNT - указатель на младшие 16 бит аппаратного счетчика;
  *              VTMR_InitTimerStruct(&myVirtTimer1CntStruct,
- *                                   (uint32_t*) &TIM3->CNT,
- *                                   (uint32_t*) &TIM4->CNT);
+ *                                   (uint16_t*) &TIM3->CNT,
+ *                                   (uint16_t*) &TIM4->CNT);
  *              VTMR_InitTimerStruct(&myVirtTimer2CntStruct,
- *                                   (uint32_t*) &TIM3->CNT,
- *                                   (uint32_t*) &TIM4->CNT);
+ *                                   (uint16_t*) &TIM3->CNT,
+ *                                   (uint16_t*) &TIM4->CNT);
+ *
+ *              // Если используется только 16 битный таймер вместо 32 битного, то
+ *              // в качестве указателя на старшие 16 бит аппаратного счетчика
+ *              // следует передать NULL
+ *              VTMR_InitTimerStruct(&myVirtTimer1CntStruct,
+ *                                   (uint16_t*) NULL,
+ *                                   (uint16_t*) &TIM4->CNT);
+ *              VTMR_InitTimerStruct(&myVirtTimer2CntStruct,
+ *                                   (uint16_t*) NULL,
+ *                                   (uint16_t*) &TIM4->CNT);
  *              ...
  *              while(1)
  *              {
  *                  // Запись в переменную счетчика текущего значения
- *                  // аппаратного 32-х битного счетчика;
+ *                  // аппаратного счетчика;
  *                  // @see VTMR_tmr_s;
  *                  VTMR_StartTimer(&myVirtTimer1CntStruct);
  *                  VTMR_StartTimer(&myVirtTimer2CntStruct);
  *                  ...
  *
  *                  // Определение разницы между текущим значением аппаратного
- *                  // 32-х битного счетчика и значением переменной счетчика в
+ *                  // счетчика и значением переменной счетчика в
  *                  // структуре myVirtTimer1CntStruct.
  *                  // В результате имеем количество тиков аппаратного счетчика
  *                  // между вызовами функций VTMR_StartTimer() и VTMR_GetTimerValue();
@@ -125,10 +135,6 @@
  *                  myVirtTimer2Value == myVirtTimer2CntStruct.timeInterval;
  *                  ...
  *
- *                  // Если myVirtTimer1CntStruct.cnt == 2^32 - 4,
- *                  // и *pHighCntReg == 0,
- *                  // и *pLowCntReg == 5,
- *                  // то функция VTMR_GetTimerValue() вернет значение 9;
  *              }
  *          }
  *      @endcode
@@ -306,6 +312,8 @@ VTMR_GetMaxTimerValue(
  * @brief   Функция инициализирует структуру виртуального таймера
  * @param[in]   *pVTMR: Указатель на структуру виртуального таймера
  * @param[in]   *pHighCntReg:   Указатель на старшие 16 бит аппаратного счетчика
+ *  @note   Если разрядность таймера 16 бит (вместо 32 бит), то вместо указателя
+ *          на старшие 16 бит аппаратного счетчика необходимо передать NULL
  * @param[in]   *pLowCntReg:    Указатель на младшие 16 бит аппаратного счетчика
  * @return  None
  */

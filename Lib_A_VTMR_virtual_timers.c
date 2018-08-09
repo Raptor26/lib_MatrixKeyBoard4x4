@@ -205,9 +205,9 @@ VTMR_IntProcess (
 /* ################################################################## */
 
 /**
- * @brief   Функция сбрасывает в нуль виртуальный таймер;
- * @param[in]   *vTMR:  Указатель на структуру виртуального таймера;
- * @return None;
+ * @brief   Функция сбрасывает в нуль виртуальный таймер
+ * @param[in]   *vTMR:  Указатель на структуру виртуального таймера
+ * @return None
  */
 void
 VTMR_StartTimer(
@@ -232,10 +232,10 @@ VTMR_StartTimer(
 
 /**
  * @brief   Функция вычисляет временной интервал между вызовами функции
- *          "VTMR_StartTimer" и "VTMR_GetTimerValue"
- * @param[in,out]   *pVTMR: Указатель на структуру виртуального таймера;
+ *          "VTMR_StartTimer()" и "VTMR_GetTimerValue()"
+ * @param[in,out]   *pVTMR: Указатель на структуру виртуального таймера
  * @return  Временной интервал между вызовами функций "VTMR_StartTimer" и
- *          "VTMR_GetTimerValue" в тиках аппаратного счетчика;
+ *          "VTMR_GetTimerValue" в тиках аппаратного счетчика
  */
 uint32_t
 VTMR_GetTimerValue(
@@ -282,12 +282,11 @@ VTMR_GetTimerValue(
 }
 
 /**
- * @brief   Функция вычисляет временной интервал между вызовами функции
- *          "VTMR_StartTimer" и "VTMR_GetTimerValue" и возвращает наибольшее
- *          значение временного интервала;
- * @param[in,out]   *pVTMR: Указатель на структуру виртуального таймера;
+ * @brief   Функция вычисляет максимальный временной интервал между вызовами функции
+ *          "VTMR_StartTimer()" и "VTMR_GetTimerValue()"
+ * @param[in,out]   *pVTMR: Указатель на структуру виртуального таймера
  * @return  Наибольший временной интервал между вызовами функций "VTMR_StartTimer" и
- *          "VTMR_GetTimerValue" в тиках аппаратного счетчика;
+ *          "VTMR_GetTimerValue" в тиках аппаратного счетчика
  */
 uint32_t
 VTMR_GetMaxTimerValue(
@@ -340,11 +339,11 @@ VTMR_GetMaxTimerValue(
 }
 
 /**
- * @brief   Функция инициализирует структуру виртуального таймера;
- * @param[in]   *pVTMR: Указатель на структуру виртуального таймера;
- * @param[in]   *pHighCntReg:   Указатель на старшие 16 бит аппаратного счетчика:
- * @param[in]   *pLowCntReg:    Указатель на младшие 16 бит аппаратного счетчика:
- * @return  None;
+ * @brief   Функция инициализирует структуру виртуального таймера
+ * @param[in]   *pVTMR: Указатель на структуру виртуального таймера
+ * @param[in]   *pHighCntReg:   Указатель на старшие 16 бит аппаратного счетчика
+ * @param[in]   *pLowCntReg:    Указатель на младшие 16 бит аппаратного счетчика
+ * @return  None
  */
 void
 VTMR_InitTimerStruct(

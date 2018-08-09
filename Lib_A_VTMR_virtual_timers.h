@@ -1,8 +1,8 @@
-/*
- * File:   Lib_A_vtmr_virtual_timers.h
- * Author: m.isaev
- *
- * Created on 4 октября 2017 г., 9:33
+/**
+ * @file    "Lib_A_VTMR_virtual_timers.h"
+ * @author  Isaev Mickle;
+ * @version 1.2
+ * @date    09.08.2018
  */
 
 #ifndef LIB_A_VTMR_VIRTUAL_TIMERS_H

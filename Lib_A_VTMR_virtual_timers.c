@@ -1,8 +1,8 @@
 /**
  * @file    "Lib_A_VTMR_virtual_timers.c"
- * @author  Isaev Mickle;
- * @version Beta;
- * @date    19.03.2018
+ * @author  Isaev Mickle
+ * @version 1.2
+ * @date    09.08.2018
  *
  * @brief   Библиотека содержит функции для работы с виртуальными таймерами.
  *          --------------------------------------------------------------------
@@ -276,12 +276,12 @@ VTMR_GetTimerValue(
 		if (pVTMR->cnt >= *pVTMR->pLowCntReg)
 		{
 			pVTMR->timeInterval =
-				((uint32_t) (((uint16_t)65535u - (uint16_t) pVTMR->cnt) + (uint16_t) * pVTMR->pLowCntReg) & 0x0000FFFF);
+				(((uint32_t) ((VTMR_16BIT_CNT_MAX_VAL - (uint16_t) pVTMR->cnt) + (uint16_t) * pVTMR->pLowCntReg)) & 0x0000FFFF);
 		}
 		else
 		{
 			pVTMR->timeInterval =
-				((uint32_t) ((uint16_t) * pVTMR->pLowCntReg - (uint16_t) pVTMR->cnt) & 0x0000FFFF);
+				(((uint32_t) ((uint16_t) * pVTMR->pLowCntReg - (uint16_t) pVTMR->cnt)) & 0x0000FFFF);
 		}
 	}
 	return pVTMR->timeInterval;

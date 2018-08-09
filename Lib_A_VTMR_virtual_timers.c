@@ -292,43 +292,7 @@ uint32_t
 VTMR_GetMaxTimerValue(
 	VTMR_tmr_s *pVTMR)
 {
-	/* Если режим работы таймера 32-х битный */
-	if (pVTMR->pHighCntReg != NULL)
-	{
-		uint32_t highCnt = (uint32_t) * pVTMR->pHighCntReg,
-				 lowCnt = (uint32_t) * pVTMR->pLowCntReg;
-
-		uint32_t cnt32Bit =
-			(((highCnt << 16) & 0xFFFF0000)
-			 | (lowCnt & 0x0000FFFF)) - pVTMR->cnt;
-
-		/* Если было обнуление аппаратного счетчика */
-		if (pVTMR->cnt >= cnt32Bit)
-		{
-			pVTMR->timeInterval =
-				VTMR_32BIT_CNT_MAX_VAL - pVTMR->cnt + cnt32Bit;
-		}
-		else
-		{
-			pVTMR->timeInterval =
-				cnt32Bit - pVTMR->cnt;
-		}
-	}
-	/* Иначе, если режим работы таймера 16-ти битный */
-	else
-	{
-		/* Если было обнуление аппаратного счетчика */
-		if (((uint16_t) pVTMR->cnt) >= ((uint16_t) *pVTMR->pLowCntReg))
-		{
-			pVTMR->timeInterval =
-				((uint32_t) ((VTMR_16BIT_CNT_MAX_VAL - (uint16_t) pVTMR->cnt) + (uint16_t) * pVTMR->pLowCntReg) & 0x0000FFFF);
-		}
-		else
-		{
-			pVTMR->timeInterval =
-				((uint32_t) ((uint16_t) * pVTMR->pLowCntReg - (uint16_t) pVTMR->cnt) & 0x0000FFFF);
-		}
-	}
+	VTMR_GetTimerValue(pVTMR);
 
 	// Если новое значение временного интервала больше предыдущего:
 	if (pVTMR->timeInterval > pVTMR->timeIntervalMax)
